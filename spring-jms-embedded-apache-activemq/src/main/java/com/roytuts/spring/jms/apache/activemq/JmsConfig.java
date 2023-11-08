@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.MessageListenerContainer;
 
 @Configuration
-//@PropertySource("classpath:application.properties")
 public class JmsConfig {
 
 	@Value("${jms.broker.url}")
@@ -30,10 +28,15 @@ public class JmsConfig {
 	private MessageConsumer messageConsumer;
 
 	@Bean
-	public BrokerService broker() throws Exception {
+	public BrokerService broker() {
 		BrokerService broker = new BrokerService();
-		broker.addConnector(brokerUrl);
+		try {
+			broker.addConnector(brokerUrl);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		broker.setPersistent(false);
+
 		return broker;
 	}
 
